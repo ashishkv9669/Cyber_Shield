@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhishGuard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
+    body{background:#0b1020;color:#e5e7eb}
+    a{text-decoration:none;color:inherit}
+
+    /* HEADER */
+    header{ position: static; background:#0f172a;border-bottom:1px solid #1f2937;width: 100%;z-index: 1000;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 40px}
+    .logo{display:flex;align-items:center;gap:10px;font-size:26px;font-weight:700}
+    .logo span{background:linear-gradient(90deg,#3b82f6,#22c55e);-webkit-background-clip:text;color:transparent}
+    nav{display:flex;gap:24px;font-size:15px;color:#cbd5f5}
+    nav a:hover{color:#60a5fa}
+    .auth{display:flex;gap:14px}
+    .btn{padding:8px 16px;border-radius:6px;font-size:14px}
+    .btn-outline{border:1px solid #3b82f6;color:#3b82f6}
+    .btn-fill{background:#3b82f6;color:#fff}
+    
+
+    /* HERO */
+    .hero{text-align:center;padding:80px 20px;max-width:800px;margin:0 auto}
+    .hero h1{font-size:54px;letter-spacing:2px;margin-bottom:16px}
+    .hero p{max-width:720px;margin:0 auto 40px;color:#9ca3af;font-size:15px}
+
+    /* SEARCH BOX */
+    .scanner{max-width:720px;margin:0 auto}
+    .tabs{display:flex;justify-content:center;gap:60px;margin-bottom:30px;color:#9ca3af;font-size:14px}
+    .tabs .active{color:#60a5fa;border-bottom:2px solid #60a5fa;padding-bottom:6px}
+    .upload{border:2px dashed #334155;border-radius:12px;padding:50px}
+    .upload button{margin-top:20px;padding:10px 24px;background:#111827;border:1px solid #374151;color:#e5e7eb;border-radius:6px}
+
+
+  #scanBtn {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 34px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(59,130,246,0.35);
+  transition: all 0.2s ease;
+}
+
+#scanBtn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 36px rgba(59,130,246,0.45);
+  cursor: pointer;
+}
+
+#scanBtn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(59,130,246,0.3);
+}
+
+#scanBtn:disabled {
+  background: #475569;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+
+
+    /* FOOTER */
+    footer{background:#020617;margin-top:100px;padding:60px 40px}
+    .footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px}
+    footer h4{margin-bottom:14px;font-size:15px}
+    footer ul{list-style:none;font-size:14px;color:#9ca3af}
+    footer li{margin-bottom:8px}
+    footer li:hover{color:#60a5fa}
+    .copy{text-align:center;margin-top:40px;color:#64748b;font-size:13px}
+
+    /* Compact email box */
+#emailInput{
+height:140px;
+resize:none;
+}
+
+/* Deepfake upload UI */
+.upload-box{
+border:2px dashed #475569;
+border-radius:12px;
+padding:30px;
+text-align:center;
+transition:0.3s;
+background:#020617;
+}
+
+.upload-box:hover{
+border-color:#3b82f6;
+background:#020617;
+}
+
+.upload-box i{
+font-size:34px;
+color:#3b82f6;
+margin-bottom:10px;
+}
+
+.file-name{
+margin-top:10px;
+font-size:13px;
+color:#94a3b8;
+}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="logo"><img src="/static/Logo.jpeg" height="36" /> 
+      
+    </div>
+    <nav>
+      <a href="#">Our Product</a>
+      <a href="#">Community</a>
+      <a href="#">Tools</a>
+      <a href="#">Premium Services</a>
+      <a href="#">Documentation</a>
+    </nav>
+    <div class="auth">
+      <a class="btn btn-outline">Sign in</a>
+      <a class="btn btn-fill">Sign up</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <img src="/static/Nameee.jpeg" alt="PhishGuard Logo" style="height:150px;margin-bottom:20px" />
+  <p>Analyse suspicious URLs to detect phishing and malware threats and share intelligence with the security community.</p>
+  <div style="margin-bottom:18px">
+  <span style="
+    background:#020617;
+    border:1px solid #1e293b;
+    padding:6px 14px;
+    border-radius:999px;
+    font-size:12px;
+    color:#22c55e">
+    ● System Online
+  </span>
+</div>
+
+  <div class="scanner">
+    <div class="tabs">
+  <div class="active" onclick="switchTab('url',this)">URL SCAN</div>
+  <div onclick="switchTab('email',this)">EMAIL</div>
+  <div onclick="switchTab('deepfake',this)">DEEPFAKE</div>
+</div>
+
+<div class="upload">
+
+  <!-- URL -->
+  <div id="urlBox">
+    <p>Paste suspicious URL below</p>
+
+    <input type="text" id="urlInput"
+      placeholder="https://example.com"
+      style="width:100%;margin-top:20px;padding:14px;border-radius:6px;border:1px solid #374151;background:#020617;color:#e5e7eb">
+  </div>
+
+  <!-- EMAIL -->
+<div id="emailBox" style="display:none">
+
+  <h3 style="font-size:18px;color:#60a5fa;margin-bottom:6px">
+      🔐 Check if your email is compromised
+    </h3>
+
+    <p style="font-size:13px;color:#94a3b8;margin-bottom:18px">
+      We scan breach databases to see whether your email, password, or personal data has been exposed.
+    </p>
+
+  <div style="
+  background:#020617;
+  border:1px solid #1e293b;
+  border-radius:14px;
+  padding:22px;
+  text-align:left">
+
+    
+
+    <input type="email"
+      id="emailInput"
+      placeholder="Enter your email address"
+      style="width:100%;margin-top:20px;padding:14px;border-radius:6px;border:1px solid #374151;background:#020617;color:#e5e7eb">
+
+    <div style="display:flex;gap:10px;margin-top:14px;font-size:12px;color:#94a3b8">
+      <span>✔ Breach detection</span>
+      <span>✔ Dark web scan</span>
+      <span>✔ Data leak status</span>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- DEEPFAKE -->
+<div id="deepfakeBox" style="display:none">
+
+  <label for="mediaInput" style="width:100%">
+
+    <div style="
+    border:2px dashed #334155;
+    border-radius:16px;
+    padding:35px 20px;
+    text-align:center;
+    background:#020617;
+    cursor:pointer;
+    transition:0.3s">
+
+      <div style="font-size:38px;color:#3b82f6;margin-bottom:10px">🎭</div>
+
+      <h4 style="color:#e5e7eb;margin-bottom:6px">
+        Upload media for Deepfake Detection
+      </h4>
+
+      <p style="font-size:13px;color:#94a3b8">
+        Supports images & videos
+      </p>
+
+      <div id="fileName"
+      style="margin-top:12px;font-size:13px;color:#22c55e"></div>
+
+    </div>
+
+  </label>
+
+  <input type="file" id="mediaInput" hidden accept="image/*,video/*">
+
+</div>
+<div style="
+margin-top:18px;
+font-size:12px;
+color:#94a3b8;
+display:flex;
+justify-content:center;
+gap:18px;
+flex-wrap:wrap">
+
+<span>🔒 Your data is never stored</span>
+<span>⚡ AI powered detection</span>
+<span>🧠 Real-time analysis</span>
+
+</div>
+
+  <button id="scanBtn" style="margin-top:20px" onclick="handleScan()">
+    Scan URL
+  </button>
+
+  <button onclick="runDemo()" style="
+margin-top:12px;
+background:#020617;
+border:1px solid #334155;
+color:#60a5fa;
+padding:10px 20px;
+border-radius:10px;
+cursor:pointer">
+✨ Try Demo Scan
+</button>
+
+<div id="scanLoader" style="
+display:none;
+text-align:center;
+padding:30px;
+color:#60a5fa;
+font-size:14px">
+
+⏳ Running AI analysis...
+
+</div>
+
+ <div id="resultCard" style="
+  display:none;
+  margin-top:25px;
+  background:#1e293b;
+  border-radius:14px;
+  padding:20px;
+  color:#e5e7eb
+">
+
+  <!-- TOP ALERT -->
+  <div id="vtAlert" style="
+    background:#334155;
+    padding:12px 16px;
+    border-radius:10px;
+    color:#f87171;
+    font-size:15px;
+    margin-bottom:16px
+  ">
+    ❗ <span id="vtAlertText"></span>
+  </div>
+
+  <!-- MAIN ROW -->
+  <div style="display:flex;gap:20px;align-items:flex-start">
+
+    <!-- SCORE -->
+    <div style="
+      width:110px;
+      height:110px;
+      border-radius:50%;
+      background:#0f172a;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      border:4px solid #334155
+    ">
+      <div id="vtScore" style="font-size:32px;color:#f87171;font-weight:700">1</div>
+      <div style="font-size:13px;color:#94a3b8">/ 98</div>
+    </div>
+
+    <!-- DETAILS -->
+    <div style="flex:1">
+      <p id="scannedUrl" style="font-size:14px;color:#cbd5f5;word-break:break-all"></p>
+
+      <div style="margin-top:10px;font-size:13px;color:#94a3b8">
+        Status: <span id="vtStatus"></span> |
+        Content type: <span id="vtType"></span> |
+        Last analysis: <span id="vtLast"></span>
+      </div>
+
+      <!-- TAGS -->
+      <div id="vtTags" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 🎭 DEEPFAKE RESULT CARD (ADD HERE) -->
+<div id="deepfakeResultCard" style="
+display:none;
+margin-top:25px;
+background:#1e293b;
+border-radius:16px;
+padding:22px;
+color:#e5e7eb">
+
+  <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+    <img id="heatmapImg" style="width:220px;margin-top:10px;border-radius:12px"/>
+
+    <!-- MEDIA PREVIEW -->
+    <div style="
+    width:160px;
+    height:160px;
+    background:#020617;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden">
+
+      <img id="dfPreview" style="width:100%;display:none">
+      <video id="dfVideoPreview" style="width:100%;display:none" controls></video>
+
+    </div>
+
+    <!-- RESULT -->
+    <div style="flex:1">
+
+      <h3 id="dfVerdict" style="font-size:22px;margin-bottom:6px"></h3>
+
+      <div style="color:#94a3b8;font-size:13px;margin-bottom:14px">
+        AI Model: CNN Media Forensics • Real-time analysis
+      </div>
+
+      <!-- CONFIDENCE BAR -->
+      <div style="margin-bottom:8px;font-size:13px">Confidence</div>
+
+      <div style="background:#020617;border-radius:999px;height:10px;overflow:hidden">
+        <div id="dfConfidenceBar" style="
+        height:10px;
+        width:0%;
+        background:linear-gradient(90deg,#22c55e,#3b82f6)">
+        </div>
+      </div>
+
+      <div id="dfConfidenceText" style="font-size:12px;color:#94a3b8;margin-top:6px"></div>
+
+      <!-- EXTRA META -->
+      <div style="margin-top:14px;font-size:12px;color:#94a3b8">
+        <span id="dfMediaType"></span> •
+        <span id="dfProcessTime"></span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+  </section>
+  <section style="background:#0f172a;color:#0f172a;padding:100px 40px;text-align:center">
+<span style="display:inline-block;background:linear-gradient(90deg,#2563eb,#3b82f6);color:#fff;padding:6px 16px;border-radius:999px;font-size:12px;letter-spacing:1px">HOW IT WORKS</span>
+<h2 style="color:white;margin:20px;font-size:42px;font-weight:700">Protection in Three Simple Steps</h2>
+<p style="margin-top:12px;color:#9ca3af;font-size:16px">From suspicious email to verified safety in seconds</p>
+
+
+<div style="margin-top:70px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:60px;max-width:1100px;margin-left:auto;margin-right:auto">
+<div>
+<div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 20px">1</div>
+<h3 style="color:white;font-size:20px;margin-bottom:10px">Copy Email</h3>
+<p style="color:#9ca3af;font-size:15px">Copy the suspicious email content you want to analyze</p>
+</div>
+<div>
+<div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 20px">2</div>
+<h3 style="color:white;font-size:20px;margin-bottom:10px">Click Analyze</h3>
+<p style="color:#9ca3af;font-size:15px">Our AI performs 50+ security checks in less than a minute</p>
+</div>
+<div>
+<div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 20px">3</div>
+<h3 style="color:white; font-size:20px;margin-bottom:10px">Get Results</h3>
+<p style="color:#9ca3af;font-size:15px">Get a detailed risk score with actionable recommendations</p>
+</div>
+</div>
+
+</section>
+
+<footer style="background:radial-gradient(circle at top,#020617,#020617,#020617);padding:80px 60px 40px;color:#cbd5f5">
+<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;max-width:1200px;margin:auto">
+<div>
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+<img src="/static/Nameee.jpeg" alt="PhishGuard Logo" style="height:30px;margin:2px" />
+</div>
+<p style="color:#94a3b8;max-width:360px;line-height:1.7">
+Advanced email security that respects your privacy. Protect yourself from phishing attacks with cutting-edge AI detection technology.
+</p>
+</div>
+
+
+<div>
+<h4 style="color:#ffffff;margin-bottom:16px">Product</h4>
+<ul style="list-style:none;padding:0;color:#94a3b8">
+<li style="margin-bottom:10px">Pricing & Features</li>
+</ul>
+</div>
+
+
+<div>
+<h4 style="color:#ffffff;margin-bottom:16px">Company</h4>
+<ul style="list-style:none;padding:0;color:#94a3b8">
+<li style="margin-bottom:10px">About Us</li>
+</ul>
+</div>
+
+
+<div>
+<h4 style="color:#ffffff;margin-bottom:16px">Support</h4>
+<ul style="list-style:none;padding:0;color:#94a3b8">
+<li style="margin-bottom:10px">Help Center</li>
+<li>Contact</li>
+</ul>
+</div>
+</div>
+
+
+<div style="border-top:1px solid #1e293b;margin-top:50px;padding-top:24px;text-align:center;color:#64748b;font-size:14px">
+© 2026 PhishGuard. All rights reserved. | <span style="color:#94a3b8">Privacy</span> | <span style="color:#94a3b8">Terms</span>
+</div>
+</footer>
+
+<script>
+
+let currentTab="url"
+
+function switchTab(tab,el){
+
+currentTab=tab
+
+document.querySelectorAll(".tabs div").forEach(t=>t.classList.remove("active"))
+el.classList.add("active")
+
+urlBox.style.display="none"
+emailBox.style.display="none"
+deepfakeBox.style.display="none"
+resultCard.style.display="none"
+deepfakeResultCard.style.display="none" 
+vtAlert.style.display="block"
+vtScore.parentElement.style.display="flex"
+
+if(tab==="url"){urlBox.style.display="block";scanBtn.innerText="Scan URL"}
+if(tab==="email"){emailBox.style.display="block";scanBtn.innerText="Scan Email"}
+if(tab==="deepfake"){deepfakeBox.style.display="block";scanBtn.innerText="Detect Deepfake"}
+
+}
+
+function handleScan(){
+
+if(currentTab==="url") scanUrl()
+if(currentTab==="email") scanEmail()
+if(currentTab==="deepfake") scanDeepfake()
+
+}
+
+document.getElementById("mediaInput").addEventListener("change",()=>{
+fileName.innerText=mediaInput.files[0].name
+})
+
+function showEmailResult(verdict, email){
+
+resultCard.style.display="block"
+deepfakeResultCard.style.display="none";
+
+// ❌ hide URL specific parts
+vtAlert.style.display="none"
+vtScore.parentElement.style.display="none"
+
+// ✅ email info
+scannedUrl.innerText=email
+vtType.innerText="Email Breach Analysis"
+vtLast.innerText="Just now"
+vtStatus.innerText=verdict
+
+if(verdict.toLowerCase().includes("safe")){
+vtStatus.style.color="#22c55e"
+}else{
+vtStatus.style.color="#ef4444"
+}
+
+// tags
+vtTags.innerHTML=`
+<span style="background:#334155;padding:6px 12px;border-radius:999px;font-size:12px">Breach database scan</span>
+<span style="background:#334155;padding:6px 12px;border-radius:999px;font-size:12px">Dark web exposure check</span>
+`
+}
+
+function scanEmail(){
+
+const email=emailInput.value.trim()
+
+if(!email){alert("Enter email");return}
+
+fetch("/scan-email",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({ email })
+})
+.then(res=>res.json())
+.then(data=>{
+showEmailResult(data.final_verdict,email)
+})
+
+}
+
+function scanDeepfake(){
+
+const file = mediaInput.files[0]
+if(!file){alert("Upload file");return}
+
+const formData = new FormData()
+formData.append("file", file)
+
+fetch("/scan-deepfake",{method:"POST",body:formData})
+.then(res=>res.json())
+.then(data=>{
+
+  if (data.error){
+  alert(data.error)
+  return
+}
+
+deepfakeResultCard.style.display="block"
+resultCard.style.display="none"
+
+const previewImg = document.getElementById("dfPreview")
+const previewVideo = document.getElementById("dfVideoPreview")
+
+previewImg.style.display="none"
+previewVideo.style.display="none"
+
+const fileURL = URL.createObjectURL(file)
+
+if(file.type.startsWith("image")){
+  previewImg.src = fileURL
+  previewImg.style.display="block"
+}else{
+  previewVideo.src = fileURL
+  previewVideo.style.display="block"
+}
+
+dfVerdict.innerText = data.final_verdict
+
+dfConfidenceBar.style.width = data.confidence + "%"
+dfConfidenceText.innerText = data.confidence + "% confidence"
+
+dfMediaType.innerText = data.media_type
+dfProcessTime.innerText = "Processed in " + data.processing_time + "s"
+
+heatmapImg.src = "data:image/jpeg;base64," + data.heatmap
+heatmapImg.style.display = "block"
+
+})
+}
+
+</script>
+
+<script>
+  
+function scanUrl() {
+  const url = document.getElementById("urlInput").value.trim();
+  const btn = document.getElementById("scanBtn");
+  deepfakeResultCard.style.display = "none";
+
+  if (!url) {
+    alert("Please enter a URL");
+    return;
+  }
+
+  let finalUrl = url;
+
+// Agar protocol missing hai to http:// add karo
+if (!/^https?:\/\//i.test(finalUrl)) {
+  finalUrl = "http://" + finalUrl;
+}
+
+// Ab validate karo
+try {
+  new URL(finalUrl);
+} catch {
+  alert("Invalid URL format");
+  return;
+}
+
+
+  btn.disabled = true;
+  btn.innerText = "Scanning...";
+
+  const card = document.getElementById("resultCard");
+  card.style.display = "block";
+
+  fetch("/scan-url", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url: finalUrl })
+  })
+  .then(res => res.json())
+  .then(data => {
+
+  const phishingProb = data.ml_prob_phishing;
+  const mlConfidence = data.ml_confidence;
+
+
+  if (phishingProb === undefined) {
+  alert("ML data missing from backend");
+  return;
+}
+
+
+  const verdictText = data.final_verdict;
+
+let verdictColor = "#22c55e";
+let vendorsFlagged = 0;
+
+if (verdictText.includes("CONFIRMED")) {
+  verdictColor = "#7f1d1d";
+  vendorsFlagged = 14;
+} else if (verdictText.includes("PHISHING")) {
+  verdictColor = "#ef4444";
+  vendorsFlagged = 7;
+} else if (verdictText.includes("SUSPICIOUS")) {
+  verdictColor = "#fb923c";
+  vendorsFlagged = 3;
+} else {
+  verdictColor = "#22c55e";
+  vendorsFlagged = 0;
+}
+
+  /* ===== TOP ALERT ===== */
+  document.getElementById("vtAlertText").innerText =
+    `${vendorsFlagged}/98 security vendors flagged this URL`;
+
+  /* ===== SCORE CIRCLE ===== */
+  animateScore(vendorsFlagged);
+  document.getElementById("vtScore").style.color = verdictColor;
+
+  /* ===== URL ===== */
+  document.getElementById("scannedUrl").innerText = data.url;
+
+  /* ===== STATUS LINE ===== */
+  document.getElementById("vtStatus").innerText = verdictText;
+  document.getElementById("vtStatus").style.color = verdictColor;
+
+  document.getElementById("vtType").innerText = "Machine Learning Analysis";
+  document.getElementById("vtLast").innerText = "Just now";
+
+  /* ===== TAGS (WHY ML DECIDED THIS) ===== */
+  const tagBox = document.getElementById("vtTags");
+  tagBox.innerHTML = "";
+
+  const tags = [
+    `ML confidence: ${mlConfidence ?? "N/A"}%`,
+    `Phishing probability: ${phishingProb}%`,
+    ...(data.warnings || [])
+  ];
+
+  tags.forEach(t => {
+    const span = document.createElement("span");
+    span.innerText = t;
+    span.style.cssText = `
+      background:#334155;
+      padding:5px 12px;
+      border-radius:999px;
+      font-size:12px;
+      color:#e5e7eb
+    `;
+    tagBox.appendChild(span);
+  });
+
+  btn.disabled = false;
+  btn.innerText = "Scan URL";
+})
+
+  .catch(err => {
+    alert("Backend not responding");
+    console.error(err);
+    btn.disabled = false;
+    btn.innerText = "Scan URL";
+  });
+  
+  
+function animateScore(target){
+  let count = 0;
+  const el = document.getElementById("vtScore");
+
+  const interval = setInterval(()=>{
+    count++;
+    el.innerText = count;
+    if(count >= target) clearInterval(interval);
+  }, 30);
+}
+}
+
+
+</script>
+</body>
+</html>
